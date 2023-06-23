@@ -78,7 +78,7 @@
                         <select name="model" id="model" onchange="onModelSelect()" required>
                             <option value="">-- SELECT --</option>
                             {% for model in models %}
-                            <option value="{{model.id}}">{{model.currency_id}} {{model.interval_id}} Minutes</option>
+                            <option value="{{model.id}}">{{model.currency_id}} {{model.interval_id}} Minutes {{model.version}}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -124,10 +124,10 @@
                     </div>
                     <div class="report-status-row">
                     <div class = "status-percentage">
-                        <p class="small-name">Currency:-  {{last_report.currency_id}}</p>
-                        <p class="small-name">Interval:- {{last_report.interval_id}} Minutes</p>
-                        <p class="small-name">From Date:- {{last_report.from_date|date:'d-m-Y'}}</p>
-                        <p class="small-name">To Date:- {{last_report.to_date|date:'d-m-Y'}}</p>
+                        <p class="small-name">Currency:-  {{report.currency_id}}</p>
+                        <p class="small-name">Interval:- {{report.interval_id}} Minutes</p>
+                        <p class="small-name">From Date:- {{report.from_date|date:'d-m-Y'}}</p>
+                        <p class="small-name">To Date:- {{report.to_date|date:'d-m-Y'}}</p>
                     </div>
                     </div>
                     {% endif %}
