@@ -121,6 +121,7 @@ def get_data(request):
         # "current_price": result_current_price,
     }
 
+    # return render(request, 'chartjs/demo_v2.html', context)
     return render(request, 'chartjs/demo_v2.html', context)
     # return render(request, 'chartjs/demo_v1.html', context)
 
@@ -200,6 +201,9 @@ def get_currency(request):
     if currency__ != '' and interval__ == '':
         # sql_query_historical_data = "SELECT TO_CHAR(current_time_, 'DD/MM/YYYY HH:MM:SS') as current_time_, currency, time_interval, round(actual_high::numeric, 5) as actual_high, round(actual_low::numeric, 5) as actual_low, round(predicted_high::numeric, 5) as predicted_high, round(predicted_low::numeric, 5) as predicted_low, TO_CHAR(target_datetime, 'DD/MM/YYYY HH:MM:SS') as target_datetime, TO_CHAR(datetime_hit_high, 'DD/MM/YYYY HH:MM:SS') as datetime_hit_high, TO_CHAR(datetime_hit_low, 'DD/MM/YYYY HH:MM:SS') as datetime_hit_low from historical_data where currency = '" + currency__ + "' order by current_time_ asc"
         sql_query_historical_data_bid = "SELECT interval, actual_bid, actual_max_bid, buy_prediction, actual_high_dt, prediction_dt FROM forex_pred_bid_logs_tbl where interval = '"+interval__+"' limit 5;"
+
+        get_bid_predcition = "Select buy_prediction FROM forex_pred_bid_logs_tbl where interval = '"+interval__+"' ORDER BY prediction_dt DESC LIMIT 1;"
+
         sql_query_historical_data_ask = " SELECT interval, actual_ask, actual_min_ask, sell_prediction, actual_low_dt, prediction_dt FROM forex_pred_ask_logs_tbl where interval = '"+interval__+"'  LIMIT 5;"
         # cursor.execute(sql_query_historical_data_ask)
         # result_historical_ask = cursor.fetchall()
@@ -210,16 +214,23 @@ def get_currency(request):
         # sql_query_historical_data_bid = "SELECT interval, actual_bid, actual_max_bid, buy_prediction, TO_CHAR(actual_high_dt, 'DD/MM/YYYY HH:MM:SS') as actual_high_dt, " \
         #                                 "TO_CHAR(prediction_dt, 'DD/MM/YYYY HH:MM:SS') as prediction_dt FROM forex_pred_bid_logs_tbl where interval = '"+interval__+"' and currency = '"+currency__+"' ORDER BY prediction_dt DESC LIMIT 5;"
 
-        sql_query_historical_data_bid = "SELECT interval, actual_bid, actual_max_bid, buy_prediction, actual_high_dt, prediction_dt FROM forex_pred_bid_logs_tbl where interval = '"+interval__+"' ORDER BY prediction_dt DESC LIMIT 5;"
-        sql_query_historical_data_ask = "SELECT interval, actual_ask, actual_min_ask, sell_prediction, actual_low_dt, prediction_dt FROM forex_pred_ask_logs_tbl where interval = '"+interval__+"' ORDER BY prediction_dt DESC LIMIT 5;"
+        sql_query_historical_data_bid = "SELECT interval, current_dt, actual_bid, actual_min_max_bid, buy_prediction, prediction_dt, actual_low_high_dt FROM forex_pred_bid_logs_tbl where interval = '"+interval__+"' ORDER BY prediction_dt DESC LIMIT 5;"
+        get_bid_predcition = "Select buy_prediction FROM forex_pred_bid_logs_tbl where interval = '"+interval__+"' ORDER BY prediction_dt DESC LIMIT 1;"
+        sql_query_historical_data_ask = "SELECT interval, current_dt, actual_ask, actual_min_ask, sell_prediction, prediction_dt, actual_low_dt FROM forex_pred_ask_logs_tbl where interval = '"+interval__+"' ORDER BY prediction_dt DESC LIMIT 5;"
 
         # sql_query_historical_data_ask = " SELECT interval, actual_ask, actual_min_ask, sell_prediction, TO_CHAR(actual_low_dt, 'DD/MM/YYYY HH:MM:SS') as actual_low_dt, " \
         #                                 "TO_CHAR(prediction_dt, 'DD/MM/YYYY HH:MM:SS') as prediction_dt FROM forex_pred_ask_logs_tbl where interval = '"+interval__+"' ORDER BY prediction_dt DESC LIMIT 5 ;"
 
     cursor.execute(sql_query_historical_data_ask)
     result_historical_ask = cursor.fetchall()
+
+    cursor.execute(get_bid_predcition)
+    bid_prediction_value = cursor.fetchall()[0][0]
+    print("bid_prediction_value",bid_prediction_value)
+
     cursor.execute(sql_query_historical_data_bid)
     result_historical_bid = cursor.fetchall()
+    # print(result_historical_bid)
 
 
     # # if currency__ != '' and interval__ == '':
@@ -238,39 +249,39 @@ def get_currency(request):
     second_bid_arrow = "SELECT check_strong_buy FROM forex_pred_bid_logs_tbl where interval = '"+interval__+"' ORDER BY prediction_dt DESC LIMIT 1;"
     third_bid_arrow = "SELECT check_bullish_buy FROM forex_pred_bid_logs_tbl where interval = '"+interval__+"' ORDER BY prediction_dt DESC LIMIT 1;"
 
-    first_ask_arrow = "SELECT check_sell FROM forex_pred_ask_logs_tbl where interval = '"+interval__+"' ORDER BY prediction_dt DESC LIMIT 1;"
-    second_ask_arrow = "SELECT check_strong_sell FROM forex_pred_ask_logs_tbl where interval = '"+interval__+"' ORDER BY prediction_dt DESC LIMIT 1;"
-    third_ask_arrow = "SELECT check_bullish_sell FROM forex_pred_ask_logs_tbl where interval = '"+interval__+"' ORDER BY prediction_dt DESC LIMIT 1;"
+    # first_ask_arrow = "SELECT check_sell FROM forex_pred_ask_logs_tbl where interval = '"+interval__+"' ORDER BY prediction_dt DESC LIMIT 1;"
+    # second_ask_arrow = "SELECT check_strong_sell FROM forex_pred_ask_logs_tbl where interval = '"+interval__+"' ORDER BY prediction_dt DESC LIMIT 1;"
+    # third_ask_arrow = "SELECT check_bullish_sell FROM forex_pred_ask_logs_tbl where interval = '"+interval__+"' ORDER BY prediction_dt DESC LIMIT 1;"
 
-    cursor.execute(first_bid_arrow)
-    first_bid_arrow_ = cursor.fetchall()[0][0]
-    print(first_bid_arrow_)
+    # cursor.execute(first_bid_arrow)
+    # first_bid_arrow_ = cursor.fetchall()[0][0]
+    # # print(first_bid_arrow_)
+    #
+    # cursor.execute(second_bid_arrow)
+    # second_bid_arrow_ = cursor.fetchall()[0][0]
+    # # print(second_bid_arrow_)
+    #
+    # cursor.execute(third_bid_arrow)
+    # third_bid_arrow_ = cursor.fetchall()[0][0]
+    # print(third_bid_arrow_)
 
-    cursor.execute(second_bid_arrow)
-    second_bid_arrow_ = cursor.fetchall()[0][0]
-    print(second_bid_arrow_)
-
-    cursor.execute(third_bid_arrow)
-    third_bid_arrow_ = cursor.fetchall()[0][0]
-    print(third_bid_arrow_)
-
-    cursor.execute(first_ask_arrow)
-    first_ask_arrow_ = cursor.fetchall()[0][0]
-    print(first_ask_arrow_)
-
-    cursor.execute(second_ask_arrow)
-    second_ask_arrow_ = cursor.fetchall()[0][0]
-    print(second_ask_arrow_)
-    cursor.execute(third_ask_arrow)
-    third_ask_arrow_ = cursor.fetchall()[0][0]
-    print(third_ask_arrow_)
+    # cursor.execute(first_ask_arrow)
+    # first_ask_arrow_ = cursor.fetchall()[0][0]
+    # # print(first_ask_arrow_)
+    #
+    # cursor.execute(second_ask_arrow)
+    # second_ask_arrow_ = cursor.fetchall()[0][0]
+    # # print(second_ask_arrow_)
+    # cursor.execute(third_ask_arrow)
+    # third_ask_arrow_ = cursor.fetchall()[0][0]
+    # # print(third_ask_arrow_)
 
     # first_bid_arrow__ = "Buy"
     # second_bid_arrow__ = "Strong Buy"
-    # third_bid_arrow__ = "Bullish Buy"
+    # # third_bid_arrow__ = "Bullish Buy"
     # first_ask_arrow__ = "Sell"
     # second_ask_arrow__ = "Strong Sell"
-    # third_ask_arrow__ = "Bullish Sell"
+    # # third_ask_arrow__ = "Bullish Sell"
     response = {
     # 'method' : method_,
     # 'current_price': current_price,
@@ -283,12 +294,13 @@ def get_currency(request):
     'result_historical_ask': result_historical_ask,
     'ask_price': ask_price,
     'bid_price': bid_price,
-    'first_bid_arrow_':first_bid_arrow_,
-    'second_bid_arrow_':second_bid_arrow_,
-    'third_bid_arrow_':third_bid_arrow_,
-    'first_ask_arrow_': first_ask_arrow_,
-    'second_ask_arrow_': second_ask_arrow_,
-    'third_ask_arrow_': third_ask_arrow_
+    'bid_prediction_value':bid_prediction_value,
+    # 'first_bid_arrow_':first_bid_arrow_,
+    # 'second_bid_arrow_':second_bid_arrow_,
+    # 'third_bid_arrow_':third_bid_arrow_
+    # 'first_ask_arrow_': first_ask_arrow_,
+    # 'second_ask_arrow_': second_ask_arrow_,
+    # 'third_ask_arrow_': third_ask_arrow_
     }
 
     return JsonResponse(response)
