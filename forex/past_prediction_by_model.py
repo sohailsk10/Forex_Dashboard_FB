@@ -8,9 +8,8 @@ import numpy as np
 import pandas as pd
 import MetaTrader5 as mt5
 from datetime import datetime, timedelta
-from silence_tensorflow import silence_tensorflow
-from tensorflow.keras.models import load_model
-from sklearn.preprocessing import StandardScaler
+# from tensorflow.keras.models import load_model
+# from sklearn.preprocessing import StandardScaler
 from urllib.parse import quote
 from .models import *
 import csv
@@ -19,7 +18,6 @@ from .models import *
 from .past_prediction import get_rsi, moving_avg, get_data_mt5, get_forecast_df, get_data_mt5_resample_1Min
 import os
 
-silence_tensorflow()
 N_PAST = 48
 N_FUTURE = 1
 BASE_CSV_DIR = 'live_data_csv'

@@ -6,16 +6,16 @@ import numpy as np
 import pandas as pd
 import MetaTrader5 as mt5
 from datetime import datetime, timedelta, timezone
-from silence_tensorflow import silence_tensorflow
-from tensorflow.keras.models import load_model
-from sklearn.preprocessing import StandardScaler
+# from silence_tensorflow import silence_tensorflow
+# from tensorflow.keras.models import load_model
+# from sklearn.preprocessing import StandardScaler
 from urllib.parse import quote
 from .models import *
 import csv
 from dateutil import tz
 from .models import *
 
-silence_tensorflow()
+# silence_tensorflow()
 N_PAST = 48
 N_FUTURE = 1
 LOCAL_HOUR_TO_ADD = 5
