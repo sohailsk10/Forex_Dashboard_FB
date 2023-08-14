@@ -162,10 +162,10 @@ def get_currency(request):
 
     cursor.execute(sql_query_get_scores)
     scores = cursor.fetchall()
-    # scores_ = scores[0][1]
+    scores_ = scores[0][1]
     # print(scores)
 
-    scores_ = -3
+    # scores_ = -3
 
 
 
