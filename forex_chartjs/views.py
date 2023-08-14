@@ -152,10 +152,21 @@ def get_currency(request):
 
     if currency__ == '':
         sql_query_bid_tbl = "SELECT prediction_time, current_bid_value, predictions_bid_value, actual_max_val_8hr, actual_min_val_8hr, current_bid_pred_value, percentage, action FROM forex_pred_signal ORDER BY prediction_time DESC LIMIT 5;"
+        sql_query_get_scores = "SELECT prediction_time, decision FROM forex_pred_signal ORDER BY prediction_time DESC LIMIT 1;"
     else:
         sql_query_bid_tbl = "SELECT prediction_time, current_bid_value, predictions_bid_value, actual_max_val_8hr, actual_min_val_8hr, current_bid_pred_value, percentage, action FROM forex_pred_signal ORDER BY prediction_time DESC LIMIT 5;"
+        sql_query_get_scores = "SELECT prediction_time, decision FROM forex_pred_signal ORDER BY prediction_time DESC LIMIT 1;"
+    
     cursor.execute(sql_query_bid_tbl)
     result_bid_tbl = cursor.fetchall()
+
+    cursor.execute(sql_query_get_scores)
+    scores = cursor.fetchall()
+    # scores_ = scores[0][1]
+    # print(scores)
+
+    scores_ = -3
+
 
 
     if currency__ != '' and interval__ == '':
@@ -186,6 +197,7 @@ def get_currency(request):
 
     response = {
     'result_bid_tbl': result_bid_tbl,
+    'scores_': scores_,
     'result_historical': result_historical_bid,
     'ask_price': ask_price,
     'bid_price': bid_price
